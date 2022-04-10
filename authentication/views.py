@@ -1,5 +1,9 @@
 from django.shortcuts import render,redirect
 from authentication.models import CustomUser,UserForm
+from order.models import Order
+from rest_framework import generics
+from .serializers import UserSerializer,DetailUserSerializer,OrderByUserSerializer
+from rest_framework import viewsets
 # Create your views here.
 def all_users(request):
     content=CustomUser.objects.all()
@@ -25,3 +29,21 @@ def add_user(request,id=0):
         if form.is_valid():
             form.save()
         return redirect('/users/all_users/')
+
+
+class UserIdView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = DetailUserSerializer
+
+
+class UserListView(generics.ListAPIView):
+    serializer_class = UserSerializer
+    queryset = CustomUser.objects.all()
+
+
+class CreateUserView(generics.CreateAPIView):
+    serializer_class = DetailUserSerializer
+
+class OrderByUserView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderByUserSerializer

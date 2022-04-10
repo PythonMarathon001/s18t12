@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from author.models import Author, AuthorForm
-
+from .serializers import AuthorSerializer,DetailAuthorSerializer
+from rest_framework import generics
 # Create your views here.
 
 def all_authors(request):
@@ -31,3 +32,14 @@ def add_author(request, id=0):
         if form.is_valid():
             form.save()
         return redirect('/authors/all_authors')
+
+class AuthorListView(generics.ListAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+class AuthorByIdView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Author.objects.all()
+    serializer_class = DetailAuthorSerializer
+
+class AuthorCreateView(generics.CreateAPIView):
+    serializer_class = DetailAuthorSerializer

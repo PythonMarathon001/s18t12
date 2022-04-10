@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.template import loader
 from django.views import generic
-
+from rest_framework import generics
+from .serializers import BookSerializer,DetailBookSerializer
 from book.models import Book, BookForm
 from order.models import Order
 from author.models import Author
@@ -114,7 +115,15 @@ def ordered_books_name_descending(request):
     context = {'book_objects': book_objects}
     return render(request, 'book/ordered_books.html', context)
 
+class BookListView(generics.ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
 
+class BookByIdView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = DetailBookSerializer
 
+class BookCreateView(generics.CreateAPIView):
+    serializer_class = DetailBookSerializer
 
 

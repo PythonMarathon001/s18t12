@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from order.models import Order,OrderForm
-
+from .serializers import DetailOrderSerializer,OrderSerializer
+from rest_framework import  generics
 # Create your views here.
 
 def all_orders(request):
@@ -37,3 +38,14 @@ def add_order(request,id=0):
         if form.is_valid():
             form.save()
         return redirect('/orders/all_orders')
+
+class OrderListView(generics.ListAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class OrderByIdView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = DetailOrderSerializer
+
+class OrderCreateView(generics.CreateAPIView):
+    serializer_class = DetailOrderSerializer
